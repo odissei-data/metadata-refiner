@@ -5,8 +5,6 @@ from schema.input import RefinerInput
 app = FastAPI()
 
 
-# SPOLISJJJJBUSVV
-
 @app.post('/cbs-metadata-refinement')
 async def dataverse_metadata_enhancer(refiner_input: RefinerInput) -> dict:
     metadata = refiner_input.metadata
