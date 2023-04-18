@@ -13,7 +13,6 @@ async def dataversenl_refinement(refiner_input: RefinerInput) -> dict:
     return refine_dataverse_nl_metadata(refiner_input.metadata)
 
 
-
 @app.post('/metadata-refinement/cbs')
 async def cbs_metadata_refinement(refiner_input: RefinerInput) -> dict:
     return refine_cbs_metadata(refiner_input.metadata)
