@@ -62,5 +62,5 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_PASSWORD }}
       - name: Push to dockerhub
         run: |
-          docker build . --file Dockerfile --tag fjodorvr/dataverse-metadata-fetcher:${{ env.version }}
-          docker push fjodorvr/dataverse-metadata-fetcher:${{ env.version }}
+          docker build . --file Dockerfile --tag fjodorvr/metadata-refiner:${{ env.version }}
+          docker push fjodorvr/metadata-refiner:${{ env.version }}
