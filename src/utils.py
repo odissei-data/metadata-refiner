@@ -3,7 +3,6 @@ def add_contact_email(metadata, contact_email):
 
     If metadata exported from a Dataverse is missing the contact email,
     add_contact_email can be used to add a contact email.
-    TODO: make the email value an env variable.
 
     :param contact_email: Standard contact email to use.
     :param metadata: Dataverse JSON that is missing the contact email.

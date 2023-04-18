@@ -45,6 +45,4 @@ def retrieve_license_name(license_string):
             dataset_lic = "CC BY-NC-SA 4.0"
         elif re.search(r'zero/1\.0', license_string):
             dataset_lic = "CC0 1.0"
-    elif re.search(r'DANSLicence', license_string):
-        dataset_lic = "DANS Licence"
     return dataset_lic

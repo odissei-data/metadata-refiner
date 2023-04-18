@@ -1,5 +1,8 @@
 from fastapi.testclient import TestClient
-from main import app, remove_jjjj_vv
+
+from cbs_refiner import remove_jjjj_vv
+from main import app
+
 
 client = TestClient(app)
 
@@ -51,7 +54,7 @@ def test_dataverse_metadata_enhancer():
             }
         }
     }
-    response = client.post('/cbs-metadata-refinement', json=input_data)
+    response = client.post('/metadata-refinement/cbs', json=input_data)
     assert response.status_code == 200
     assert response.json() == expected_output
 
@@ -73,5 +76,5 @@ def test_dataverse_metadata_enhancer_missing_key():
             }
         }
     }
-    response = client.post('/cbs-metadata-refinement', json=input_data)
+    response = client.post('/metadata-refinement/cbs', json=input_data)
     assert response.status_code == 422
