@@ -1,3 +1,6 @@
+import csv
+
+
 def add_contact_email(metadata, contact_email):
     """ Adds a contact email to dataverse JSON.
 
@@ -37,3 +40,10 @@ def add_contact_email(metadata, contact_email):
             ]
         })
     return metadata
+
+
+def csv_to_dict(filename: str) -> dict[str, str]:
+    with open(filename, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+        next(reader)  # skip header row if present
+        return {row[1]: row[0] for row in reader if len(row) >= 2}
