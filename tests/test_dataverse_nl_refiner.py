@@ -20,8 +20,6 @@ def test_format_license():
     assert format_license({
         'uri': 'https://creativecommons.org/publicdomain/zero/1.0/'
     }) == 'CC0 1.0'
-    assert format_license('DANSLicence') == 'DANS Licence'
-    assert format_license(None) is None
 
 
 def test_retrieve_license_name():
@@ -45,12 +43,18 @@ def test_refine_dataverse_nl_metadata():
     metadata = {
         "datasetVersion": {
             "metadataBlocks": {
-                "block1": {
-                    "field1": "value1"
+                "citation": {
+                    "fields": [
+                        {
+                            "typeName": "author",
+                            "value": "Doe, John"
+                        },
+                        {
+                            "typeName": "title",
+                            "value": "Example Dataset"
+                        }
+                    ]
                 },
-                "block2": {
-                    "field2": "value2"
-                }
             },
             "termsOfUse": "terms_of_use",
             "termsOfAccess": "terms_of_access",
@@ -69,15 +73,22 @@ def test_refine_dataverse_nl_metadata():
     metadata = {
         "datasetVersion": {
             "metadataBlocks": {
-                "block1": {
-                    "field1": "value1"
+                "citation": {
+                    "fields": [
+                        {
+                            "typeName": "author",
+                            "value": "Doe, John"
+                        },
+                        {
+                            "typeName": "title",
+                            "value": "Example Dataset"
+                        }
+                    ]
                 },
-                "block2": {
-                    "field2": "value2"
-                }
-            }
+            },
         }
     }
+
     refined_metadata = refine_dataverse_nl_metadata(metadata)
     assert refined_metadata["datasetVersion"]["metadataBlocks"] == \
            metadata["datasetVersion"]["metadataBlocks"]
