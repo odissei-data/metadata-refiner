@@ -1,3 +1,4 @@
 CONTAINER_NAME=metadata-refiner
 PORT=7878
 APPLICATION_DIR=src
+DSC_TABLE_CSV=data/DSC_table.csv
