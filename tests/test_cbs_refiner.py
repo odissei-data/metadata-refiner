@@ -14,7 +14,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 @pytest.fixture
 def dsc_dict():
-    return csv_to_dict(os.path.join(PROJECT_ROOT, "data", "DSC_table.csv"))
+    return csv_to_dict(os.path.join(PROJECT_ROOT, "src/data", "DSC_table.csv"))
 
 
 def test_remove_jjjj_vv():
