@@ -10,7 +10,7 @@ from utils import csv_to_dict
 
 app = FastAPI()
 
-DSC_TABLE_CSV = os.environ.get('DSC_TABLE_CSV', 'DSC_table.csv')
+DSC_TABLE_CSV = os.environ.get('DSC_TABLE_CSV', 'data/DSC_table.csv')
 
 
 @app.on_event("startup")
