@@ -13,11 +13,10 @@ app = FastAPI()
 DSC_TABLE_CSV = os.environ.get('DSC_TABLE_CSV', 'data/DSC_table.csv')
 
 
-@app.on_event("startup")
 def load_data():
     filename = os.path.join(os.getcwd(), DSC_TABLE_CSV)
     dsc_dictionary = csv_to_dict(filename)
-    app.state.dsc_dictionary = dsc_dictionary
+    return dsc_dictionary
 
 
 @app.post('/metadata-refinement/dataverse-nl')
@@ -27,8 +26,9 @@ async def dataversenl_refinement(refiner_input: RefinerInput) -> dict:
 
 @app.post('/metadata-refinement/cbs')
 async def cbs_metadata_refinement(refiner_input: RefinerInput) -> dict:
+    dsc_dictionary = load_data()
     return refine_cbs_metadata(refiner_input.metadata,
-                               app.state.dsc_dictionary)
+                               dsc_dictionary)
 
 
 @app.post('/metadata-refinement/sicada')
