@@ -2,12 +2,9 @@ import os
 
 import pytest
 from fastapi import HTTPException
-from fastapi.testclient import TestClient
 from cbs_refiner import remove_jjjj_vv, refine_cbs_metadata
-from main import app
 from utils import csv_to_dict
 
-client = TestClient(app)
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
