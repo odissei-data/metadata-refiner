@@ -46,4 +46,7 @@ def remove_jjjj_vv(alternative_title: str):
         'VVBUS', 'BUS').replace('JJJJTAB', 'TAB').replace('VVTAB', 'TAB')
     alternative_title = alternative_title.replace('JJJJBUS', 'BUS').replace(
         'VVBUS', 'BUS').replace('JJJJTAB', 'TAB').replace('VVTAB', 'TAB')
+
+    alternative_title = alternative_title.rstrip('_')
+
     return alternative_title
