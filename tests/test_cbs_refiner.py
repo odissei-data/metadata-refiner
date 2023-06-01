@@ -28,6 +28,7 @@ def test_remove_jjjj_vv():
     assert remove_jjjj_vv('JJJJTABVVTAB') == 'TABTAB'
     assert remove_jjjj_vv('CWIJJJJMMDDTABVV') == 'CWITAB'
     assert remove_jjjj_vv('GEMSTPLAATSJJJJMMBUSVV') == 'GEMSTPLAATSBUS'
+    assert remove_jjjj_vv('b_handel_JJJJMM') == "B_HANDEL"
 
 
 def test_cbs_metadata_refiner_dsc_dictionary(dsc_dict):
