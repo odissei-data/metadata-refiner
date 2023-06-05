@@ -20,6 +20,9 @@ def test_format_license():
     assert format_license({
         'uri': 'https://creativecommons.org/publicdomain/zero/1.0/'
     }) == 'CC0 1.0'
+    assert format_license({
+        'uri': 'https://doi.org/10.17026/fp39-0x58'
+    }) == 'DANS Licence'
 
 
 def test_retrieve_license_name():
