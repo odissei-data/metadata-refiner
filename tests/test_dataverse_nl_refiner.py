@@ -23,6 +23,9 @@ def test_format_license():
     assert format_license({
         'uri': 'https://doi.org/10.17026/fp39-0x58'
     }) == 'DANS Licence'
+    assert format_license({
+        'uri': 'http://creativecommons.org/licenses/by-nc-nd/4.0'
+    }) == 'CC BY-NC-ND 4.0'
 
 
 def test_retrieve_license_name():
