@@ -1,10 +1,11 @@
 name: Docker Image CI
 
-  on:
-    push:
-      tags:
-        -'*'
-  jobs:
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
     push:
       name: Push to registry.
       runs-on: ubuntu-latest
