@@ -32,9 +32,8 @@ jobs:
           cp -r pyproject.toml src/stub.toml
           cp -r pyproject.toml src/tests/stub.toml
       - name: Run Pytest
-        run: |
-          cd src/
-          python -m pytest
+        working-directory: src/
+        run: python -m pytest
   push:
     name: Push to registry.
     runs-on: ubuntu-latest
