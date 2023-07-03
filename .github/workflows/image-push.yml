@@ -9,7 +9,6 @@ jobs:
     push:
       name: Push to registry.
       runs-on: ubuntu-latest
-      needs: test
       steps:
         - name: Checkout repo
           uses: actions/checkout@v3
