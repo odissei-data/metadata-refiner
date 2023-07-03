@@ -2,7 +2,7 @@ import os
 
 import pytest
 from fastapi import HTTPException
-from cbs_refiner import remove_jjjj_vv, refine_cbs_metadata
+from cbs_refiner import remove_jjjj_vv, refine_cbs_metadata, refine_keywords
 from utils import csv_to_dict
 
 
@@ -72,7 +72,7 @@ def test_cbs_metadata_refiner_dsc_dictionary(dsc_dict):
     assert test_output == expected_output
 
 
-def test_cbs_metadata_refiner_remove_jjj_vv(dsc_dict):
+def test_cbs_metadata_refiner_clean_alternative_title(dsc_dict):
     input_data = {
         "datasetVersion": {
             "metadataBlocks": {
@@ -132,3 +132,75 @@ def test_cbs_metadata_refiner_missing_key(dsc_dict):
         refine_cbs_metadata(input_data, dsc_dict)
     assert exc_info.value.status_code == 422
 
+
+def test_cbs_metadata_refiner_refine_keywords(dsc_dict):
+    input_data = {
+        "datasetVersion": {
+            "metadataBlocks": {
+                "citation": {
+                    "fields": [
+                        {
+                            "typeName": "keyword",
+                            "typeClass": "controlledVocabulary",
+                            "multiple": True,
+                            "value": ["keyword1/keyword2", "keyword3"]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    expected_output = {
+        "datasetVersion": {
+            "metadataBlocks": {
+                "citation": {
+                    "fields": [
+                        {
+                            "typeName": "keyword",
+                            "typeClass": "controlledVocabulary",
+                            "multiple": True,
+                            "value": ["keyword1", "keyword2", "keyword3"]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    test_output = refine_cbs_metadata(input_data, dsc_dict)
+
+    assert test_output == expected_output
+
+
+# Run the test case
+test_cbs_metadata_refiner_refine_keywords(dsc_dict)
+
+
+def test_refine_keywords():
+    fields = [
+        {'typeName': 'keyword', 'value': ['keyword1/keyword2', 'keyword3']},
+        {'typeName': 'other', 'value': 'some value'}
+    ]
+
+    # Test case 1: Keywords with slashes
+    expected_output = ['keyword1', 'keyword2', 'keyword3']
+    output = refine_keywords(fields)
+    assert output == expected_output
+
+    # Test case 2: No keyword field
+    fields_no_keywords = [
+        {'typeName': 'other', 'value': 'some value'}
+    ]
+    expected_output_no_keywords = []
+    output_no_keywords = refine_keywords(fields_no_keywords)
+    assert output_no_keywords == expected_output_no_keywords
+
+    # Test case 3: Empty keyword value
+    fields_empty_keywords = [
+        {'typeName': 'keyword', 'value': []},
+        {'typeName': 'other', 'value': 'some value'}
+    ]
+    expected_output_empty_keywords = []
+    output_empty_keywords = refine_keywords(fields_empty_keywords)
+    assert output_empty_keywords == expected_output_empty_keywords
