@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from cbs_refiner import clean_alternative_title, refine_cbs_metadata, \
+from refiners.cbs_refiner import clean_alternative_title, refine_cbs_metadata, \
     refine_keywords
 from utils import csv_to_dict
 
