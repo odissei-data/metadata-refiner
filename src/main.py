@@ -2,9 +2,9 @@ import os
 
 from fastapi import FastAPI
 
-from cbs_refiner import refine_cbs_metadata
-from datastation_refiner import refine_datastation_metadata
-from dataverse_nl_refiner import refine_dataverse_nl_metadata
+from refiners.cbs_refiner import refine_cbs_metadata
+from refiners.datastation_refiner import refine_datastation_metadata
+from refiners.dataverse_nl_refiner import refine_dataverse_nl_metadata
 from schema.input import RefinerInput
 from sicada_refiner import refine_sicada_metadata
 from utils import csv_to_dict

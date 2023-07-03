@@ -1,4 +1,4 @@
-from dataverse_nl_refiner import refine_dataverse_nl_metadata, \
+from refiners.dataverse_nl_refiner import refine_dataverse_nl_metadata, \
     retrieve_license_name, format_license
 from utils import add_contact_email
 
