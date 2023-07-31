@@ -1,11 +1,14 @@
+import re
+
 from fastapi import HTTPException
 
 
 def refine_cbs_metadata(metadata: dict, dsc_dictionary) -> dict:
-    """ Refines CBS metadata by refining the alt title and keyword field.
+    """ Refines CBS metadata, specificly alt title, keyword and statline field.
 
     The alternative title is either matched on a table or cleaned up.
     The keyword is split on "/" character and added as separate keywords.
+    The statline field formats all statline links to be clickable URLs.
 
     :param metadata: CBS metadata to be refined.
     :param dsc_dictionary: DSC dictionary containing refined alt titles.
@@ -13,21 +16,32 @@ def refine_cbs_metadata(metadata: dict, dsc_dictionary) -> dict:
     :raises HTTPException: Raises if required keys are missing from metadata.
     """
     try:
-        fields = metadata['datasetVersion']['metadataBlocks']['citation'][
-            'fields']
+        metadataBlocks = metadata['datasetVersion']['metadataBlocks']
     except KeyError as error:
         raise HTTPException(status_code=422, detail=str(error))
 
-    alt_title_dict = get_field('alternativeTitle', fields)
-    if 'value' in alt_title_dict:
-        alt_title_dict['value'] = refine_alternative_title(
-            alt_title_dict['value'], dsc_dictionary)
+    # refinements for fields in the citation metadata block.
+    if 'citation' in metadataBlocks:
+        citation_fields = metadataBlocks['citation']['fields']
 
-    keyword_dict = get_field('keyword', fields)
-    if 'value' in keyword_dict:
-        keyword_dict['value'] = refine_keywords(
-            keyword_dict['value'])
+        alt_title_dict = get_field('alternativeTitle', citation_fields)
+        if 'value' in alt_title_dict:
+            alt_title_dict['value'] = refine_alternative_title(
+                alt_title_dict['value'], dsc_dictionary)
 
+        keyword_dict = get_field('keyword', citation_fields)
+        if 'value' in keyword_dict:
+            keyword_dict['value'] = refine_keywords(
+                keyword_dict['value'])
+
+    # refinements for fields in the CBSMetadata block.
+    if 'CBSMetadata' in metadataBlocks:
+        CBS_fields = metadataBlocks['CBSMetadata']['fields']
+
+        statline_dict = get_field('statlineTabel', CBS_fields)
+        if 'value' in statline_dict:
+            statline_dict['value'] = refine_statline_table(
+                statline_dict['value'])
     return metadata
 
 
@@ -82,10 +96,11 @@ def Add_split_keywords(keyword):
 
 def refine_alternative_title(alt_title, dsc_dictionary):
     """
-    Refine an alternative title by looking it up in a dictionary or cleaning it if not found.
+    Refine an alternative title by looking it up in a dictionary or
+    cleaning it if not found.
 
     :param alt_title: The alternative title to refine.
-    :param dsc_dictionary: The dictionary containing refined alternative titles.
+    :param dsc_dictionary: Dictionary containing refined alternative titles.
     :return: The refined alternative title.
     """
     try:
@@ -140,3 +155,36 @@ def clean_alternative_title(alternative_title: str):
     alternative_title = alternative_title.rstrip('_')
 
     return alternative_title
+
+
+def refine_statline_table(statlineLinks: list) -> list:
+    """ Reformats statline links to a clickable URL if they contain a code.
+
+    Some links to the statline tables only include the id of the table.
+    This function splits the links not yet in URL format from the correctly
+    formatted links. It then formats them to also be clickable URLs.
+
+    :param statlineLinks: A list of URLs and table id's. (Linking to statline).
+    :return: List with URLs linking to statline tables.
+    """
+    valid_urls = [url for url in statlineLinks if is_url(url)]
+    statline_codes = [url for url in statlineLinks if not is_url(url)]
+    formatted_statline_urls = [format_statline_url(code) for code in
+                               statline_codes]
+
+    return valid_urls + formatted_statline_urls
+
+
+def format_statline_url(statline_code):
+    """ Alters a statline code that identifies a table to be a clickable url.
+
+    :param statline_code: The code linking to the a table.
+    :return: The URL that links to a statline table.
+    """
+    return f'https://opendata.cbs.nl/#/CBS/nl/dataset/{statline_code}'
+
+
+def is_url(s):
+    """ Checks if a string is a URL """
+    url_pattern = r'^https?://\S+$'
+    return bool(re.match(url_pattern, s))
