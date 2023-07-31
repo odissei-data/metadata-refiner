@@ -34,7 +34,6 @@ def test_remove_jjjj_vv():
 
 
 def test_cbs_metadata_refiner_dsc_dictionary(dsc_dict):
-    print(dsc_dict)
     input_data = {
         "datasetVersion": {
             "metadataBlocks": {
@@ -196,9 +195,6 @@ def test_cbs_metadata_refiner_refine_keywords(dsc_dict):
     assert test_output == expected_output
 
 
-    assert test_output == expected_output
-
-
 def test_refine_keywords():
     fields = [
         {'typeName': 'keyword', 'value': [
@@ -210,8 +206,10 @@ def test_refine_keywords():
 
     # Test case 1: Keywords with slashes
     expected_output = [
-        {'keywordValue': {'typeName': 'keywordValue', 'multiple': False, 'typeClass': 'primitive', 'value': 'keyword1'}},
-        {'keywordValue': {'typeName': 'keywordValue', 'multiple': False, 'typeClass': 'primitive', 'value': 'keyword2'}}
+        {'keywordValue': {'typeName': 'keywordValue', 'multiple': False,
+                          'typeClass': 'primitive', 'value': 'keyword1'}},
+        {'keywordValue': {'typeName': 'keywordValue', 'multiple': False,
+                          'typeClass': 'primitive', 'value': 'keyword2'}}
     ]
     output = refine_keywords(fields[0]['value'])
     assert output == expected_output
@@ -225,7 +223,8 @@ def test_refine_keywords():
         {'typeName': 'other', 'value': 'some value'}
     ]
     expected_output_no_keyword_value = []
-    output_no_keyword_value = refine_keywords(fields_no_keyword_value[0]['value'])
+    output_no_keyword_value = refine_keywords(
+        fields_no_keyword_value[0]['value'])
     assert output_no_keyword_value == expected_output_no_keyword_value
 
     # Test case 3: Empty keyword value
@@ -238,3 +237,96 @@ def test_refine_keywords():
     assert output_empty_keywords == expected_output_empty_keywords
 
 
+def test_refine_statline():
+    input_data = {
+        "datasetVersion": {
+            "metadataBlocks": {
+                "CBSMetadata": {
+                    "fields": [
+                        {
+                            "typeName": "statlineTabel",
+                            "typeClass": "primitive",
+                            "multiple": True,
+                            "value": [
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/70810ned",
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/70077ned",
+                                "https://opendata.cbs.nl/#/CBS/en/dataset/70077eng",
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/70004ned"
+                                ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    expected_output = {
+        "datasetVersion": {
+            "metadataBlocks": {
+                "CBSMetadata": {
+                    "fields": [
+                        {
+                            "typeName": "statlineTabel",
+                            "typeClass": "primitive",
+                            "multiple": True,
+                            "value": [
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/70810ned",
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/70077ned",
+                                "https://opendata.cbs.nl/#/CBS/en/dataset/70077eng",
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/70004ned"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    test_output = refine_cbs_metadata(input_data, dsc_dict)
+
+    assert test_output == expected_output
+
+
+def test_statline_code_refinement():
+    input_data = {
+        "datasetVersion": {
+            "metadataBlocks": {
+                "CBSMetadata": {
+                    "fields": [
+                        {
+                            "typeName": "statlineTabel",
+                            "typeClass": "primitive",
+                            "multiple": True,
+                            "value": ["https://opendata.cbs.nl/#/CBS/nl/dataset/81414NED",
+                                      "37118"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    expected_output = {
+        "datasetVersion": {
+            "metadataBlocks": {
+                "CBSMetadata": {
+                    "fields": [
+                        {
+                            "typeName": "statlineTabel",
+                            "typeClass": "primitive",
+                            "multiple": True,
+                            "value": [
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/81414NED",
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/37118"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    test_output = refine_cbs_metadata(input_data, dsc_dict)
+
+    assert test_output == expected_output
