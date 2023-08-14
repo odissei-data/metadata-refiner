@@ -5,7 +5,12 @@ from utils import add_contact_email
 
 def refine_dataverse_nl_metadata(metadata: dict) -> dict:
     metadata = add_contact_email(metadata, "portal@odissei.nl")
-    metadata_blocks = metadata["datasetVersion"]['metadataBlocks']
+
+    if 'metadataLanguage' in metadata and metadata[
+        'metadataLanguage'] == 'undefined':
+        del metadata['metadataLanguage']
+
+    metadata_blocks = metadata['datasetVersion']['metadataBlocks']
     dataset_version = {'metadataBlocks': metadata_blocks}
     if 'termsOfUse' in metadata['datasetVersion']:
         dataset_version['termsOfUse'] = metadata['datasetVersion'][
