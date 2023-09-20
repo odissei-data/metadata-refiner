@@ -1,5 +1,5 @@
 from refiners.dataverse_nl_refiner import refine_dataverse_nl_metadata, \
-    retrieve_license_name, format_license
+    retrieve_license_name, format_license, refine_production_place_field
 from utils import add_contact_email
 
 
@@ -88,6 +88,12 @@ def test_refine_dataverse_nl_metadata():
                         {
                             "typeName": "title",
                             "value": "Example Dataset"
+                        },
+                        {
+                            'typeName': 'productionPlace',
+                            'multiple': False,
+                            'typeClass': 'primitive',
+                            'value': 'Netherlands'
                         }
                     ]
                 },
@@ -101,6 +107,10 @@ def test_refine_dataverse_nl_metadata():
     assert "termsOfUse" not in refined_metadata["datasetVersion"]
     assert "termsOfAccess" not in refined_metadata["datasetVersion"]
     assert "license" not in refined_metadata["datasetVersion"]
+    assert metadata['datasetVersion']['metadataBlocks']['citation'][
+        'fields'][2]['multiple'], True
+    assert metadata['datasetVersion']['metadataBlocks']['citation'][
+        'fields'][2]['value'], ['Netherlands']
 
 
 def test_add_contact_email():
@@ -152,3 +162,29 @@ def test_add_contact_email():
     assert updated_metadata["datasetVersion"]["metadataBlocks"][
                "citation"]["fields"][0]["value"][0]["datasetContactEmail"][
                "value"] == contact_email
+
+def test_refine_production_place_field():
+    # Create a sample metadata dictionary with 'productionPlace' field.
+    metadata = {
+        'datasetVersion': {
+            'metadataBlocks': {
+                'citation': {
+                    'fields': [
+                        {
+                            'typeName': 'productionPlace',
+                            'multiple': False,
+                            'typeClass': 'primitive',
+                            'value': 'Netherlands'
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+    # Call the function to refine the 'productionPlace' field.
+    refine_production_place_field(metadata)
+
+    # Check if the field has been updated as expected.
+    assert metadata['datasetVersion']['metadataBlocks']['citation']['fields'][0]['multiple'], True
+    assert metadata['datasetVersion']['metadataBlocks']['citation']['fields'][0]['value'], ['Netherlands']
