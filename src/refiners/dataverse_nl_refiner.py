@@ -1,5 +1,6 @@
 import re
 
+from refiners.cbs_refiner import get_field
 from utils import add_contact_email
 
 
@@ -25,6 +26,8 @@ def refine_dataverse_nl_metadata(metadata: dict) -> dict:
             metadata['datasetVersion']['license']
         )
     metadata['datasetVersion'] = dataset_version
+
+    refine_production_place_field(metadata)
 
     return metadata
 
@@ -55,3 +58,19 @@ def retrieve_license_name(license_string):
     elif re.search(r'10\.17026/fp39-0x58', license_string):
         dataset_lic = "DANS Licence"
     return dataset_lic
+
+
+def refine_production_place_field(metadata):
+    metadataBlocks = metadata['datasetVersion']['metadataBlocks']
+    if 'citation' in metadataBlocks:
+        citation_fields = metadataBlocks['citation']['fields']
+
+        prod_place_dict = get_field('productionPlace', citation_fields)
+        # Check if the 'prod_place_dict' exists and has the required structure.
+        if prod_place_dict and 'multiple' in prod_place_dict and 'value' in prod_place_dict:
+
+            # Update the 'multiple' field to True.
+            prod_place_dict['multiple'] = True
+
+            # Wrap the 'value' field in a list.
+            prod_place_dict['value'] = [prod_place_dict['value']]
