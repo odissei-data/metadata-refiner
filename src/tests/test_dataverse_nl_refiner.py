@@ -1,5 +1,5 @@
 from refiners.dataverse_nl_refiner import refine_dataverse_nl_metadata, \
-    retrieve_license_name, format_license, refine_production_place_field
+    retrieve_license_name, format_license, refine_field_primitive_to_multiple
 from utils import add_contact_email
 
 
@@ -183,7 +183,7 @@ def test_refine_production_place_field():
     }
 
     # Call the function to refine the 'productionPlace' field.
-    refine_production_place_field(metadata)
+    refine_field_primitive_to_multiple(metadata, 'citation', 'productionPlace')
 
     # Check if the field has been updated as expected.
     assert metadata['datasetVersion']['metadataBlocks']['citation']['fields'][0]['multiple'], True

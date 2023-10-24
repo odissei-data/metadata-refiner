@@ -27,7 +27,8 @@ def refine_dataverse_nl_metadata(metadata: dict) -> dict:
         )
     metadata['datasetVersion'] = dataset_version
 
-    refine_production_place_field(metadata)
+    refine_field_primitive_to_multiple(metadata, 'citation', 'productionPlace')
+    refine_field_primitive_to_multiple(metadata, 'citation', 'series')
 
     return metadata
 
@@ -60,17 +61,16 @@ def retrieve_license_name(license_string):
     return dataset_lic
 
 
-def refine_production_place_field(metadata):
+def refine_field_primitive_to_multiple(metadata, metadataBlock, field):
     metadataBlocks = metadata['datasetVersion']['metadataBlocks']
-    if 'citation' in metadataBlocks:
-        citation_fields = metadataBlocks['citation']['fields']
+    if metadataBlock in metadataBlocks:
+        fields = metadataBlocks[metadataBlock]['fields']
 
-        prod_place_dict = get_field('productionPlace', citation_fields)
+        field_to_refine = get_field(field, fields)
         # Check if the 'prod_place_dict' exists and has the required structure.
-        if prod_place_dict and 'multiple' in prod_place_dict and 'value' in prod_place_dict:
-
+        if field_to_refine and 'multiple' in field_to_refine and 'value' in field_to_refine:
             # Update the 'multiple' field to True.
-            prod_place_dict['multiple'] = True
+            field_to_refine['multiple'] = True
 
             # Wrap the 'value' field in a list.
-            prod_place_dict['value'] = [prod_place_dict['value']]
+            field_to_refine['value'] = [field_to_refine['value']]
