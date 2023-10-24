@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "metadata-refiner"
-version = "1.2.2"
+version = "1.2.3"
 description = "A service that refines metadata."
 authors = ["Thomas van Erven"]
 
