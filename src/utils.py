@@ -47,3 +47,15 @@ def csv_to_dict(filename: str) -> dict[str, str]:
         reader = csv.reader(csvfile, delimiter=';')
         next(reader)  # skip header row if present
         return {row[1]: row[0] for row in reader if len(row) >= 2}
+
+
+def get_field(typename, fields):
+    """ Get the field dictionary for a given field type from a list of fields.
+
+    :param typename: The type name of the field.
+    :param fields: The list of fields to search in.
+    :return: The field dictionary matching the given type name, or {}.
+    """
+    field_dict = next((field for field in fields if
+                       field.get('typeName') == typename), {})
+    return field_dict
