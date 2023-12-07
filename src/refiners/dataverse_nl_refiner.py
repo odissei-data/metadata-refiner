@@ -67,10 +67,6 @@ def refine_field_primitive_to_multiple(metadata, metadataBlock, field):
         fields = metadataBlocks[metadataBlock]['fields']
 
         field_to_refine = get_field(field, fields)
-        # Check if the 'prod_place_dict' exists and has the required structure.
-        if field_to_refine and 'multiple' in field_to_refine and 'value' in field_to_refine:
-            # Update the 'multiple' field to True.
+        if field_to_refine and field_to_refine['multiple'] is False:
             field_to_refine['multiple'] = True
-
-            # Wrap the 'value' field in a list.
             field_to_refine['value'] = [field_to_refine['value']]

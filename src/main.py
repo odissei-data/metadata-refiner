@@ -3,6 +3,7 @@ import os
 from fastapi import FastAPI
 
 from refiners.cbs_refiner import refine_cbs_metadata
+from refiners.cid_refiner import refine_cid_metadata
 from refiners.datastation_refiner import refine_datastation_metadata
 from refiners.dataverse_nl_refiner import refine_dataverse_nl_metadata
 from schema.input import RefinerInput
@@ -37,6 +38,10 @@ async def cbs_metadata_refinement(refiner_input: RefinerInput) -> dict:
     dsc_dictionary = load_data()
     return refine_cbs_metadata(refiner_input.metadata,
                                dsc_dictionary)
+
+@app.post('/metadata-refinement/cid')
+async def cid_metadata_refinement(refiner_input: RefinerInput) -> dict:
+    return refine_cid_metadata(refiner_input.metadata)
 
 
 @app.post('/metadata-refinement/sicada')

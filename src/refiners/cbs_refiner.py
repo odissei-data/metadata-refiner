@@ -2,6 +2,8 @@ import re
 
 from fastapi import HTTPException
 
+from utils import get_field
+
 
 def refine_cbs_metadata(metadata: dict, dsc_dictionary) -> dict:
     """ Refines CBS metadata, specificly alt title, keyword and statline field.
@@ -43,18 +45,6 @@ def refine_cbs_metadata(metadata: dict, dsc_dictionary) -> dict:
             statline_dict['value'] = refine_statline_table(
                 statline_dict['value'])
     return metadata
-
-
-def get_field(typename, fields):
-    """ Get the field dictionary for a given field type from a list of fields.
-
-    :param typename: The type name of the field.
-    :param fields: The list of fields to search in.
-    :return: The field dictionary matching the given type name, or {}.
-    """
-    field_dict = next((field for field in fields if
-                       field.get('typeName') == typename), {})
-    return field_dict
 
 
 def refine_keywords(keyword_values):
