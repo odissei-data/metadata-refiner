@@ -1,11 +1,12 @@
-from utils import add_contact_email
+from refiners.dataverse_nl_refiner import format_license
 
 
 def refine_datastation_metadata(metadata: dict) -> dict:
-    metadata = add_contact_email(metadata, "portal@odissei.nl")
 
-    metadata_blocks = metadata["datasetVersion"]['metadataBlocks']
-    dataset_version = {'metadataBlocks': metadata_blocks}
-    metadata['datasetVersion'] = dataset_version
+    if 'license' in metadata['datasetVersion'] and metadata['datasetVersion'][
+        'license'] != 'NONE':
+        metadata['datasetVersion']['license'] = format_license(
+            metadata['datasetVersion']['license']
+        )
 
     return metadata
