@@ -1,5 +1,4 @@
 import os
-
 import pytest
 from refiners.cbs_refiner import clean_alternative_title, refine_cbs_metadata, \
     refine_keywords
@@ -43,7 +42,7 @@ def test_cbs_metadata_refiner_dsc_dictionary(dsc_dict):
                             "typeName": "alternativeTitle",
                             "typeClass": "primitive",
                             "multiple": False,
-                            "value": "PS ArbodienstenVV"
+                            "value": ["PS ArbodienstenVV"]
                         }
                     ]
                 }
@@ -60,7 +59,7 @@ def test_cbs_metadata_refiner_dsc_dictionary(dsc_dict):
                             "typeName": "alternativeTitle",
                             "typeClass": "primitive",
                             "multiple": False,
-                            "value": "PS ARBODIENSTEN"
+                            "value": ["PS ARBODIENSTEN"]
                         }
                     ]
                 }
@@ -82,8 +81,9 @@ def test_cbs_metadata_refiner_clean_alternative_title(dsc_dict):
                         {
                             "typeName": "alternativeTitle",
                             "typeClass": "primitive",
-                            "multiple": False,
-                            "value": "PS Speur- en ontwikkelingswerk"
+                            "multiple": True,
+                            "value": ["PS Speur- en ontwikkelingswerk",
+                                      "PWETSRGPERSOONJJJJBUSVV"]
                         }
                     ]
                 }
@@ -99,8 +99,9 @@ def test_cbs_metadata_refiner_clean_alternative_title(dsc_dict):
                         {
                             "typeName": "alternativeTitle",
                             "typeClass": "primitive",
-                            "multiple": False,
-                            "value": "PS_SPEURONTWIKKELING"
+                            "multiple": True,
+                            "value": ["PS_SPEURONTWIKKELING",
+                                      "PWETSRGPERSOONBUS"]
                         }
                     ]
                 }
@@ -109,7 +110,6 @@ def test_cbs_metadata_refiner_clean_alternative_title(dsc_dict):
     }
 
     test_output = refine_cbs_metadata(input_data, dsc_dict)
-
     assert test_output == expected_output
 
 
@@ -252,7 +252,7 @@ def test_refine_statline():
                                 "https://opendata.cbs.nl/#/CBS/nl/dataset/70077ned",
                                 "https://opendata.cbs.nl/#/CBS/en/dataset/70077eng",
                                 "https://opendata.cbs.nl/#/CBS/nl/dataset/70004ned"
-                                ]
+                            ]
                         }
                     ]
                 }
@@ -297,8 +297,9 @@ def test_statline_code_refinement():
                             "typeName": "statlineTabel",
                             "typeClass": "primitive",
                             "multiple": True,
-                            "value": ["https://opendata.cbs.nl/#/CBS/nl/dataset/81414NED",
-                                      "37118"
+                            "value": [
+                                "https://opendata.cbs.nl/#/CBS/nl/dataset/81414NED",
+                                "37118"
                             ]
                         }
                     ]

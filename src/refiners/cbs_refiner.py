@@ -28,9 +28,11 @@ def refine_cbs_metadata(metadata: dict, dsc_dictionary) -> dict:
 
         alt_title_dict = get_field('alternativeTitle', citation_fields)
         if 'value' in alt_title_dict:
-            alt_title_dict['value'] = refine_alternative_title(
-                alt_title_dict['value'], dsc_dictionary)
-
+            alt_titles = []
+            for alternative_title in alt_title_dict['value']:
+                alt_titles.append(refine_alternative_title(
+                    alternative_title, dsc_dictionary))
+            alt_title_dict['value'] = alt_titles
         keyword_dict = get_field('keyword', citation_fields)
         if 'value' in keyword_dict:
             keyword_dict['value'] = refine_keywords(
