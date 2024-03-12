@@ -29,6 +29,7 @@ def refine_dataverse_nl_metadata(metadata: dict) -> dict:
 
     refine_field_primitive_to_multiple(metadata, 'citation', 'productionPlace')
     refine_field_primitive_to_multiple(metadata, 'citation', 'series')
+    refine_field_primitive_to_multiple(metadata, 'citation', 'alternativeTitle')
 
     return metadata
 
