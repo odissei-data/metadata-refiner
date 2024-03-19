@@ -1,6 +1,39 @@
+from refiners.datastation_refiner import refine_datastation_metadata
 from refiners.dataverse_nl_refiner import refine_dataverse_nl_metadata, \
     retrieve_license_name, format_license, refine_field_primitive_to_multiple
 from utils import add_contact_email
+
+
+def test_license_present_but_none():
+    metadata = {
+        'datasetVersion': {
+            'license': 'NONE'
+        }
+    }
+    expected_result = {
+        'datasetVersion': {}
+    }
+    assert refine_datastation_metadata(metadata) == expected_result
+
+def test_license_not_present():
+    metadata = {
+        'datasetVersion': {}
+    }
+    expected_result = {
+        'datasetVersion': {}
+    }
+    assert refine_datastation_metadata(metadata) == expected_result
+
+def test_license_present_but_empty():
+    metadata = {
+        'datasetVersion': {
+            'license': ''
+        }
+    }
+    expected_result = {
+        'datasetVersion': {}
+    }
+    assert refine_datastation_metadata(metadata) == expected_result
 
 
 def test_format_license():
