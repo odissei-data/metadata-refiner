@@ -1,24 +1,41 @@
 import re
 
 from fastapi import HTTPException
-
-from utils import add_doi_to_dab_link, update_field
+from utils import add_doi_to_dab_link, extract_doi_from_url
 
 
 def refine_liss_metadata(metadata: dict) -> dict:
     try:
-        doi = metadata["persistentUrl"]
+        doi = extract_doi_from_url(metadata["persistentUrl"])
         add_doi_to_dab_link(metadata, doi)
     except KeyError:
         raise HTTPException(status_code=400,
-                            detail="DOI is missing from the metadata")
+                            detail="DOI is missing from the metadata.")
 
-    update_field(metadata, "citation", "topicClassValue", update_topic)
-
-    update_field(metadata, "citation", "distributorName",
-                 update_distributor_name)
+    update_topic_classification(metadata)
 
     return metadata
+
+
+def update_topic_classification(metadata: dict) -> None:
+    """ Navigate to the path where the topicClassValue fields are located and
+     replaces them.
+
+    :param metadata:
+    """
+    citation_fields = metadata.get(
+        'metadataBlocks', {}).get('citation', {}).get('fields', [])
+
+    for field in citation_fields:
+        if field.get('typeName') == 'topicClassification':
+            topic_classifications = field.get('value', [])
+            for topic in topic_classifications:
+                if isinstance(topic, dict):
+                    topic_class_value = topic.get('topicClassValue', {}).get(
+                        'value')
+                    if isinstance(topic_class_value, str):
+                        topic['topicClassValue']['value'] = update_topic(
+                            topic_class_value)
 
 
 def update_topic(topic: str) -> str:

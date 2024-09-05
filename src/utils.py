@@ -1,6 +1,9 @@
 import csv
 import re
 from typing import Callable
+from urllib.parse import urlparse
+
+from fastapi import HTTPException
 
 
 def add_contact_email(metadata: dict, contact_email: str) -> dict:
@@ -84,16 +87,6 @@ def add_doi_to_dab_link(metadata: dict, doi: str):
             'dataAccessPlace'] = f"<a href=\"{dab_url}{doi}\">{dab_url}{doi}</a>"
 
 
-def update_field(metadata: dict, metadataBlock: str, field: str,
-                 update_function: Callable[[str], str]):
-    metadataBlocks = metadata['datasetVersion']['metadataBlocks']
-    if metadataBlock in metadataBlocks:
-        fields = metadataBlocks[metadataBlock]['fields']
-        fields_to_update = get_fields(field, fields)
-        for field in fields_to_update:
-            field['value'] = update_function(field['value'])
-
-
 def format_license(ds_license):
     if ds_license == 'CC0':
         ds_license = 'CC0 1.0'
@@ -133,3 +126,11 @@ def refine_field_primitive_to_multiple(metadata, metadataBlock, field):
         if field_to_refine and field_to_refine['multiple'] is False:
             field_to_refine['multiple'] = True
             field_to_refine['value'] = [field_to_refine['value']]
+
+
+def extract_doi_from_url(url):
+    parsed_url = urlparse(url)
+    if parsed_url.scheme == 'https' and parsed_url.netloc == 'doi.org':
+        return f'doi:{parsed_url.path.lstrip("/")}'
+    raise HTTPException(status_code=400,
+                        detail="DOI is not structured correctly.")
