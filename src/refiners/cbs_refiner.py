@@ -1,8 +1,10 @@
 import re
+import jmespath
 
 from fastapi import HTTPException
 
-from utils import get_field
+from queries import CBS_ID_QUERY
+from utils import get_field, add_doi_to_dab_link
 
 
 def refine_cbs_metadata(metadata: dict, dsc_dictionary) -> dict:
@@ -46,6 +48,12 @@ def refine_cbs_metadata(metadata: dict, dsc_dictionary) -> dict:
         if 'value' in statline_dict:
             statline_dict['value'] = refine_statline_table(
                 statline_dict['value'])
+
+    cbs_id = jmespath.search(CBS_ID_QUERY, metadata)
+    if cbs_id:
+        doi = "doi:10.57934/" + cbs_id
+        add_doi_to_dab_link(metadata, doi)
+
     return metadata
 
 

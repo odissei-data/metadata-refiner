@@ -1,19 +1,24 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-WORKDIR root
-COPY pyproject.toml .
-RUN pip install poetry
-RUN poetry config virtualenvs.create false
-RUN poetry install
+RUN addgroup --system refiner && adduser --system --ingroup refiner refiner
 
-WORKDIR src
-COPY src/ .
-COPY pyproject.toml ./stub.toml
+WORKDIR /app
+COPY pyproject.toml poetry.lock ./
 
-RUN poetry install
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    build-essential && \
+    pip install --no-cache-dir poetry==1.8.3 && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-root && \
+    apt-get remove -y build-essential && apt-get autoremove -y && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 7878
-RUN pip install uvicorn
+COPY src/ /app/src
+RUN chown -R refiner:refiner /app
+
+USER refiner
+
+WORKDIR /app/src
