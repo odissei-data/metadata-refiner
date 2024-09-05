@@ -6,30 +6,32 @@ on:
       - '*'
 
 jobs:
-    push:
-      name: Push to registry.
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repo
-          uses: actions/checkout@v3
-        - name: Set python version
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.9.14'
-        - name: Perform gruesome hack
-          run: |
-            cp -r pyproject.toml src/stub.toml
-        - name: Get version and tag image
-          run: |
-            pip install tomli
-            cd src/
-            echo "version=`python version.py`" >> $GITHUB_ENV
-        - name: Login to registry
-          uses: docker/login-action@v2
-          with:
-            username: ${{ secrets.DOCKER_HUB_USERNAME }}
-            password: ${{ secrets.DOCKER_HUB_ACCESS_PASSWORD }}
-        - name: Push to dockerhub
-          run: |
-            docker build . --file Dockerfile --tag fjodorvr/metadata-refiner:${{ env.version }}
-            docker push fjodorvr/metadata-refiner:${{ env.version }}
+  push:
+    name: Push to registry.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Set python version
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.5'
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Get version and tag image
+        run: |
+          poetry_version=$(poetry version | awk '{print $2}')
+          echo "version=${poetry_version}" >> $GITHUB_ENV
+      - name: Login to registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_PASSWORD }}
+      - name: Push to dockerhub
+        run: |
+          docker build . --file Dockerfile --tag odissei/metadata-refiner:${{ env.version }}
+          docker push odissei/metadata-refiner:${{ env.version }}
