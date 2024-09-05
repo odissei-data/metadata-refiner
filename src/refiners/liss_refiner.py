@@ -23,19 +23,20 @@ def update_topic_classification(metadata: dict) -> None:
 
     :param metadata:
     """
-    citation_fields = metadata.get(
-        'metadataBlocks', {}).get('citation', {}).get('fields', [])
+
+    try:
+        citation_fields = metadata["datasetVersion"]["metadataBlocks"][
+            "citation"]["fields"]
+    except KeyError:
+        raise HTTPException(status_code=400,
+                            detail="Metadata should be dataverse JSON.")
 
     for field in citation_fields:
         if field.get('typeName') == 'topicClassification':
-            topic_classifications = field.get('value', [])
+            topic_classifications = field['value']
             for topic in topic_classifications:
-                if isinstance(topic, dict):
-                    topic_class_value = topic.get('topicClassValue', {}).get(
-                        'value')
-                    if isinstance(topic_class_value, str):
-                        topic['topicClassValue']['value'] = update_topic(
-                            topic_class_value)
+                topic['topicClassValue']['value'] = update_topic(
+                    topic['topicClassValue']['value'])
 
 
 def update_topic(topic: str) -> str:

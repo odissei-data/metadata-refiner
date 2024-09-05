@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 
-from refiners.liss_refiner import refine_liss_metadata
+from refiners.liss_refiner import refine_liss_metadata, update_topic
 
 
 def test_refine_liss_metadata():
@@ -74,7 +74,7 @@ def test_refine_liss_metadata():
     # Expected updated values
     expected_dab_url = "https://dab.surf.nl/dataset?pid=doi:10.17026/dans-zm4-yfdv"
     expected_topic = "Social behavior"
-
+    topics = []
     # Call the function to test
     updated_metadata = refine_liss_metadata(metadata)
 
@@ -89,9 +89,15 @@ def test_refine_liss_metadata():
         if field["typeName"] == "topicClassification":
             topic_classifications = field["value"]
             for topic in topic_classifications:
-                if topic["topicClassValue"]["value"] == expected_topic:
-                    assert topic["topicClassValue"]["value"] == expected_topic
-                    break
+                topics.append(topic["topicClassValue"]["value"])
+            assert expected_topic in topics
+
+
+def test_update_topic():
+    topic = "Social behavior (LISS)"
+    updated_topic = update_topic(topic)
+    expected_topic = "Social behavior"
+    assert updated_topic == expected_topic
 
 
 def test_refine_liss_metadata_doi_missing():
