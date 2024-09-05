@@ -29,5 +29,7 @@ jobs:
         run: poetry install
       - name: Run Pytest
         working-directory: src/
+        env:
+          PYTHONPATH: src
         run: poetry run pytest
 
