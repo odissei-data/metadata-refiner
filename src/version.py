@@ -1,12 +1,14 @@
-import tomli
+import subprocess
 
 
 def get_version():
-    with open('stub.toml', 'rb') as file:
-        package_details = tomli.load(file)
-    return package_details['tool']['poetry']['version']
+    result = subprocess.run(
+        ["poetry", "version", "--short"],
+        capture_output=True,
+        text=True
+    )
+    return result.stdout.strip()
 
 
 if __name__ == '__main__':
-    result = get_version()
-    print(result)
+    print(get_version())
