@@ -33,5 +33,8 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_PASSWORD }}
       - name: Push to dockerhub
         run: |
-          docker build . --file Dockerfile --tag odissei/metadata-refiner:${{ env.version }}
+          docker build . --file Dockerfile \
+            -t odissei/metadata-refiner:${{ env.version }} \
+            -t odissei/metadata-refiner:latest
           docker push odissei/metadata-refiner:${{ env.version }}
+          docker push odissei/metadata-refiner:latest
