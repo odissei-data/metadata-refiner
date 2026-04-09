@@ -21,4 +21,7 @@ RUN chown -R refiner:refiner /app
 
 USER refiner
 
+LABEL org.opencontainers.image.source="https://github.com/odissei-data/metadata-refiner"
+LABEL org.opencontainers.image.description="Service to refine and validate metadata structure."
+
 WORKDIR /app/src

@@ -5,33 +5,34 @@ on:
     tags:
       - '*'
 
+env:
+  IMAGE: ghcr.io/odissei-data/metadata-refiner
+
 jobs:
   push:
     name: Push to registry.
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Set python version
-        uses: actions/setup-python@v4
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
         with:
-          python-version: '3.12.5'
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
         with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-      - name: Get version and tag image
-        run: |
-          poetry_version=$(poetry version | awk '{print $2}')
-          echo "version=${poetry_version}" >> $GITHUB_ENV
-      - name: Login to registry
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_PASSWORD }}
-      - name: Push to dockerhub
-        run: |
-          docker build . --file Dockerfile --tag odissei/metadata-refiner:${{ env.version }}
-          docker push odissei/metadata-refiner:${{ env.version }}
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.ref_name }}
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
