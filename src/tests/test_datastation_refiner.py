@@ -24,12 +24,12 @@ def test_add_doi_to_dab_link():
             "termsOfUse": "terms_of_use",
             "termsOfAccess": "terms_of_access",
             "license": "CC0",
-            "datasetPersistentId": "10.1234/example-doi"
+            "datasetPersistentId": "doi:10.1234/example-doi"
         }
     }
 
     # Expected URL
-    expected_dab_url = "https://dab.surf.nl/dataset?pid=10.1234/example-doi"
+    expected_dab_url = "https://dab.surf.nl/resolve-pid/doi:10.1234/example-doi"
 
     # Call the function to test
     add_doi_to_dab_link(metadata,

@@ -81,7 +81,7 @@ def get_fields(typename: str, fields: list) -> list:
 def add_doi_to_dab_link(metadata: dict, doi: str):
     """ Adds DOI to dab link, but only if dab link is in the metadata.
     """
-    dab_url = "https://dab.surf.nl/dataset?pid="
+    dab_url = "https://dab.surf.nl/resolve-pid/"
     if 'dataAccessPlace' in metadata['datasetVersion']:
         metadata['datasetVersion'][
             'dataAccessPlace'] = f"<a href=\"{dab_url}{doi}\">{dab_url}{doi}</a>"

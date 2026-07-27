@@ -72,7 +72,7 @@ def test_refine_liss_metadata():
     }
 
     # Expected updated values
-    expected_dab_url = "https://dab.surf.nl/dataset?pid=doi:10.17026/dans-zm4-yfdv"
+    expected_dab_url = "https://dab.surf.nl/resolve-pid/doi:10.17026/dans-zm4-yfdv"
     expected_topic = "Social behavior"
     topics = []
     # Call the function to test
