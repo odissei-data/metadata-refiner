@@ -152,6 +152,10 @@ def clean_alternative_title(alternative_title: str):
     alternative_title = alternative_title.replace('JJJJBUS', 'BUS').replace(
         'VVBUS', 'BUS').replace('JJJJTAB', 'TAB').replace('VVTAB', 'TAB')
 
+    # JJJJ is a year placeholder wherever it sits, so remove any that the
+    # patterns above did not cover. No catalogue entry contains one.
+    alternative_title = alternative_title.replace('JJJJ', '')
+
     alternative_title = alternative_title.rstrip('_')
 
     return alternative_title

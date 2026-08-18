@@ -33,6 +33,20 @@ def test_remove_jjjj_vv():
     assert clean_alternative_title('b_handel_JJJJMM') == "B_HANDEL"
 
 
+def test_remove_jjjj_in_the_middle_of_a_title():
+    """ JJJJ is a year placeholder wherever it appears, not only as a suffix
+    or when followed by MM, MMDD, BUS or TAB. A JJJJ left in the title can
+    never match a catalogue entry, since no entry contains one.
+    """
+    assert clean_alternative_title(
+        'BANENAFSPRAAKJJJJEINDVV') == 'BANENAFSPRAAKEIND'
+    assert clean_alternative_title(
+        'DOELGROEPREGISTERJJJJEINDVV') == 'DOELGROEPREGISTEREIND'
+    assert clean_alternative_title('EXAMVOJJJJINTVV') == 'EXAMVOINT'
+    assert clean_alternative_title(
+        'PENSIOENAANSPRAAKOPJJJJANAVV') == 'PENSIOENAANSPRAAKOPANA'
+
+
 def test_cbs_metadata_refiner_dsc_dictionary(dsc_dict):
     input_data = {
         "datasetVersion": {
