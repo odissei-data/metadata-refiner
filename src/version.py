@@ -1,13 +1,8 @@
-import subprocess
+import os
 
 
 def get_version():
-    result = subprocess.run(
-        ["poetry", "version", "--short"],
-        capture_output=True,
-        text=True
-    )
-    return result.stdout.strip()
+    return os.getenv('APP_VERSION') or 'development'
 
 
 if __name__ == '__main__':
