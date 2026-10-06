@@ -22,12 +22,6 @@ def load_data() -> dict:
     return dsc_dictionary
 
 
-@app.get("/version")
-async def info():
-    result = get_version()
-    return {"version": result}
-
-
 @app.get("/health")
 async def health():
     return {"status": "ok", "version": get_version()}
