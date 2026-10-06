@@ -9,7 +9,7 @@ from refiners.liss_refiner import refine_liss_metadata
 from refiners.sicada_refiner import refine_sicada_metadata
 from schema.input import RefinerInput
 from utils import csv_to_dict
-from version import get_version
+from version import get_image, get_version
 
 app = FastAPI()
 
@@ -24,7 +24,7 @@ def load_data() -> dict:
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "version": get_version()}
+    return {"status": "ok", "version": get_version(), "image": get_image()}
 
 
 @app.post('/metadata-refinement/cbs')
