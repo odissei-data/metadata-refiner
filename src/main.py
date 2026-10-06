@@ -28,6 +28,11 @@ async def info():
     return {"version": result}
 
 
+@app.get("/health")
+async def health():
+    return {"status": "ok", "version": get_version()}
+
+
 @app.post('/metadata-refinement/cbs')
 async def cbs_metadata_refinement(refiner_input: RefinerInput) -> dict:
     dsc_dictionary = load_data()
