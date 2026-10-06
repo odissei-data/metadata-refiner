@@ -2,7 +2,7 @@ import os
 
 
 def get_version():
-    return os.getenv('APP_VERSION') or 'development'
+    return os.getenv('APP_VERSION') or 'v0.0.0-dev'
 
 
 if __name__ == '__main__':

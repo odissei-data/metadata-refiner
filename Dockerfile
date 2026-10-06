@@ -21,7 +21,7 @@ RUN chown -R refiner:refiner /app
 
 USER refiner
 
-ARG APP_VERSION=development
+ARG APP_VERSION=v0.0.0-dev
 ENV APP_VERSION=${APP_VERSION}
 LABEL org.opencontainers.image.version="${APP_VERSION}"
 

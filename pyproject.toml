@@ -1,7 +1,8 @@
 [tool.poetry]
 package-mode = false
 name = "metadata-refiner"
-version = "1.4.5"
+# The release version is the git tag; images get it as APP_VERSION.
+version = "0.0.0"
 description = "A service that refines metadata."
 authors = ["Fjodor van Rijsselberg"]
 
